@@ -1,0 +1,21 @@
+Question:
+
+Pivot the Occupation column in OCCUPATIONS so that each Name is sorted alphabetically and displayed underneath its corresponding Occupation. 
+The output column headers should be Doctor, Professor, Singer, and Actor, respectively.
+Note: Print NULL when there are no more names corresponding to an occupation.
+
+
+Solution:
+
+with pivot_source_01 as (
+    select ROW_NUMBER() OVER (PARTITION BY Occupation ORDER BY Name) row_number,
+    name, 
+    occupation
+        from OCCUPATIONS
+
+)
+select [Doctor], [Professor], [Singer], [Actor]  
+    from pivot_source_01 
+    pivot (
+    min(name) for occupation in ([Doctor], [Professor], [Singer], [Actor])
+) as pivot_table_02 
